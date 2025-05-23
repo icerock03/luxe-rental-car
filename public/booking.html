@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Réserver un véhicule</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Réserver un véhicule</h1>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="vehicles.html">Nos véhicules</a>
+    </nav>
+  </header>
+
+  <main>
+    <form id="reservationForm" class="form-style">
+      <label for="vehicle_id">Véhicule :</label>
+      <select id="vehicle_id" name="vehicle_id" required></select>
+
+      <label for="start_date">Date de début :</label>
+      <input type="date" id="start_date" name="start_date" required>
+
+      <label for="end_date">Date de fin :</label>
+      <input type="date" id="end_date" name="end_date" required>
+
+      <button type="submit" class="btn">Réserver</button>
+    </form>
+
+    <p id="message"></p>
+  </main>
+
+  <script src="js/booking.js"></script>
+</body>
+</html>
