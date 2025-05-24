@@ -1,41 +1,35 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <title>Réservations - Luxe Rental Car</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <script>
-    if (sessionStorage.getItem('isAdmin') !== 'true') {
-      window.location.href = 'login.html';
-    }
-  </script>
-</head>
-<body>
-  <header>
-    <h1>Réservations Clients</h1>
-    <nav>
-      <a href="admin.html">Admin Véhicules</a>
-      <button onclick="logout()" class="btn">Déconnexion</button>
-    </nav>
-  </header>
+// Protection par sessionStorage
+if (sessionStorage.getItem("isAdmin") !== "true") {
+  window.location.href = "login.html";
+}
 
-  <main>
-    <section>
-      <h2>Liste des Réservations</h2>
-      <div id="bookingList" class="vehicle-list"></div>
-    </section>
-  </main>
+async function fetchBookings() {
+  try {
+    const response = await fetch('/api/bookings');
+    const bookings = await response.json();
 
-  <footer>
-    <p>&copy; 2025 Luxe Rental Car</p>
-  </footer>
+    const tableBody = document.querySelector('#bookingsTable tbody');
+    tableBody.innerHTML = '';
 
-  <script src="js/admin-bookings.js"></script>
-  <script>
-    function logout() {
-      sessionStorage.removeItem('isAdmin');
-      window.location.href = 'login.html';
-    }
-  </script>
-</body>
-</html>
+    bookings.forEach((booking) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${booking.id}</td>
+        <td>${booking.customer_name || 'N/A'}</td>
+        <td>${booking.vehicle_name || booking.vehicle_id}</td>
+        <td>${new Date(booking.start_date).toLocaleDateString()}</td>
+        <td>${new Date(booking.end_date).toLocaleDateString()}</td>
+      `;
+      tableBody.appendChild(row);
+    });
+  } catch (err) {
+    console.error('Erreur lors du chargement des réservations', err);
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem("isAdmin");
+  window.location.href = "login.html";
+}
+
+fetchBookings();
