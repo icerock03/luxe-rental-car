@@ -1,32 +1,35 @@
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('loginForm');
   const message = document.getElementById('loginMessage');
-if (res.ok) {
-  message.style.color = 'green';
-  message.textContent = data.message;
 
-  // ✅ Marquer l'utilisateur comme connecté
-  sessionStorage.setItem('isAdmin', 'true');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-  // Redirection vers admin
-  window.location.href = 'admin.html';
-}
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-  try {
-    const res = await fetch('/api/admin/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
+    try {
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
 
-    const data = await res.json();
+      const data = await response.json();
 
-    
-  } catch (error) {
-    message.style.color = 'red';
-    message.textContent = "Erreur de connexion au serveur.";
-  }
+      if (response.ok) {
+        message.style.color = 'green';
+        message.textContent = data.message;
+        sessionStorage.setItem('isAdmin', 'true');
+        window.location.href = 'admin.html';
+      } else {
+        message.style.color = 'red';
+        message.textContent = data.error || 'Identifiants incorrects';
+      }
+    } catch (error) {
+      console.error('Erreur de connexion :', error);
+      message.style.color = 'red';
+      message.textContent = 'Erreur de connexion au serveur.';
+    }
+  });
 });
