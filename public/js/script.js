@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const vehiclesContainer = document.getElementById('vehicles-container');
 
   try {
-    const response = await fetch('/api/vehicles');
+    const response = await fetch('https://luxe-rental-car-backend.onrender.com/api/vehicles');
     const vehicles = await response.json();
 
     vehicles.forEach(vehicle => {
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       card.classList.add('vehicle-card');
 
       const img = document.createElement('img');
-      img.src = `/upload/${vehicle.image}`;
+      img.src = `https://luxe-rental-car-backend.onrender.com/upload/${vehicle.image}`;
       img.alt = vehicle.name;
       img.classList.add('vehicle-image');
 
@@ -36,9 +36,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       vehiclesContainer.appendChild(card);
     });
-
   } catch (err) {
-    console.error('Erreur lors du chargement des véhicules', err);
+    console.error('❌ Erreur lors du chargement des véhicules', err);
     vehiclesContainer.innerHTML = '<p>Erreur de chargement des véhicules.</p>';
   }
 });
+
