@@ -9,8 +9,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Servir les fichiers statiques (HTML, CSS, JS, IMAGES)
+// ✅ Servir les fichiers statiques (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));
+
+// ✅ Servir les images du dossier public/upload
+app.use('/upload', express.static(path.join(__dirname, 'public/upload')));
 
 // ✅ Routes
 const vehicleRoutes = require('./routes/vehicle');
@@ -26,4 +29,5 @@ const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Serveur lancé sur le port ${PORT}`);
 });
+
 

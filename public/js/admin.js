@@ -1,78 +1,75 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("addVehicleForm");
-  const message = document.getElementById("adminMessage");
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('addVehicleForm');
+  const listContainer = document.getElementById('vehicleList');
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
 
-    const formData = new FormData(form);
+      try {
+        const response = await fetch('/api/vehicles', {
+          method: 'POST',
+          body: formData,
+        });
 
-    try {
-      const response = await fetch("/api/vehicles", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        message.style.color = "green";
-        message.textContent = data.message;
-        form.reset();
-        fetchVehicles(); // rafraîchir la liste
-      } else {
-        message.style.color = "red";
-        message.textContent = data.error || "Erreur";
+        const result = await response.json();
+        if (response.ok) {
+          alert(result.message);
+          form.reset();
+          loadVehicles();
+        } else {
+          alert(result.error || 'Erreur lors de l’ajout');
+        }
+      } catch (err) {
+        console.error('Erreur ajout véhicule', err);
+        alert('Erreur serveur');
       }
-    } catch (err) {
-      console.error("Erreur ajout véhicule :", err);
-      message.style.color = "red";
-      message.textContent = "Erreur de connexion au serveur.";
-    }
-  });
+    });
+  }
 
-  // Liste les véhicules
-  async function fetchVehicles() {
+  async function loadVehicles() {
     try {
-      const response = await fetch("/api/vehicles");
-      const vehicles = await response.json();
+      const res = await fetch('/api/vehicles');
+      const vehicles = await res.json();
+      listContainer.innerHTML = '';
 
-      const container = document.getElementById("vehicleList");
-      container.innerHTML = "";
-
-      vehicles.forEach((v) => {
-        const div = document.createElement("div");
-        div.classList.add("vehicle-card");
-
-        div.innerHTML = `
-          <img src="/upload/${v.image}" alt="${v.name}" />
-          <h3>${v.name}</h3>
-          <p>Marque : ${v.brand}</p>
-          <p>Prix : ${v.price_per_day} DH</p>
-          <button onclick="deleteVehicle(${v.id})">🗑 Supprimer</button>
+      vehicles.forEach((vehicle) => {
+        const card = document.createElement('div');
+        card.className = 'vehicle-card';
+        card.innerHTML = `
+          <h3>${vehicle.name}</h3>
+          <img src="/upload/${vehicle.image}" alt="${vehicle.name}" width="200" />
+          <p>Marque : ${vehicle.brand}</p>
+          <p>Prix : ${vehicle.price_per_day} DH</p>
+          <button onclick="deleteVehicle(${vehicle.id})">🗑 Supprimer</button>
         `;
-
-        container.appendChild(div);
+        listContainer.appendChild(card);
       });
     } catch (err) {
-      console.error("Erreur affichage véhicules admin :", err);
+      console.error('Erreur chargement véhicules', err);
     }
   }
 
   window.deleteVehicle = async function (id) {
-    if (!confirm("Supprimer ce véhicule ?")) return;
-
+    if (!confirm('Supprimer ce véhicule ?')) return;
     try {
-      const response = await fetch(`/api/vehicles/${id}`, {
-        method: "DELETE",
+      const res = await fetch(`/api/vehicles/${id}`, {
+        method: 'DELETE',
       });
-      const data = await response.json();
-      fetchVehicles();
+      const data = await res.json();
+      alert(data.message);
+      loadVehicles();
     } catch (err) {
-      console.error("Erreur suppression véhicule :", err);
+      console.error('Erreur suppression', err);
     }
   };
 
-  fetchVehicles(); // au chargement
-});
+  window.logout = function () {
+    sessionStorage.removeItem('isAdmin');
+    window.location.href = 'login.html';
+  };
 
+  // Charger la liste au démarrage
+  loadVehicles();
+});

@@ -1,16 +1,22 @@
-# Node modules
+# 📁 Node modules
 node_modules/
 
-# Fichiers sensibles
-.env
-
-# Fichiers de logs
-*.log
-
-# Cache système
+# 🗑 Fichiers système
 .DS_Store
 Thumbs.db
 
-# Ancien dossier d'upload à ignorer
-upload/
-upload_new/
+# 📄 Logs
+*.log
+
+# 📁 Fichiers de build/temp
+.env
+build/
+dist/
+tmp/
+temp/
+
+# 🚫 Ignorer tout dans public/upload...
+/public/upload/*
+
+# ✅ ... sauf les fichiers .webp (images véhicules)
+/public/upload/*.webp
