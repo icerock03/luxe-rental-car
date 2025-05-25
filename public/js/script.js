@@ -1,30 +1,42 @@
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-require('dotenv').config();
-const app = express();
-const pool = require('./db');
+document.addEventListener('DOMContentLoaded', async () => {
+  const vehiclesContainer = document.getElementById('vehicles-container');
 
-// Middlewares
-app.use(cors());
-app.use(express.json());
+  try {
+    const response = await fetch('https://luxe-rental-car-backend.onrender.com/api/vehicles');
+    const vehicles = await response.json();
 
-// ✅ Servir les fichiers statiques
-app.use('/upload', express.static(path.join(__dirname, 'upload'))); // 👉 PLACE-LA ICI
-app.use(express.static(path.join(__dirname, 'public')));
+    vehicles.forEach(vehicle => {
+      const card = document.createElement('div');
+      card.classList.add('vehicle-card');
 
-// Routes
-const vehicleRoutes = require('./routes/vehicle');
-const bookingRoutes = require('./routes/booking');
-const adminRoutes = require('./routes/admin');
+      const img = document.createElement('img');
+      img.src = `https://luxe-rental-car-backend.onrender.com/upload/${vehicle.image}`;
+      img.alt = vehicle.name;
 
-app.use('/api/vehicles', vehicleRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/admin', adminRoutes);
+      const name = document.createElement('h2');
+      name.textContent = vehicle.name;
 
-// Lancer le serveur
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`✅ Serveur lancé sur le port ${PORT}`);
+      const brand = document.createElement('p');
+      brand.textContent = `Marque : ${vehicle.brand}`;
+
+      const price = document.createElement('p');
+      price.textContent = `Prix : ${vehicle.price_per_day} MAD / jour`;
+
+      const button = document.createElement('a');
+      button.href = `booking.html?vehicle=${vehicle.id}`;
+      button.textContent = 'Réserver';
+      button.classList.add('btn');
+
+      card.appendChild(img);
+      card.appendChild(name);
+      card.appendChild(brand);
+      card.appendChild(price);
+      card.appendChild(button);
+
+      vehiclesContainer.appendChild(card);
+    });
+  } catch (error) {
+    console.error('❌ Erreur chargement véhicules :', error);
+    vehiclesContainer.innerHTML = '<p>❌ Impossible de charger les véhicules.</p>';
+  }
 });
-
