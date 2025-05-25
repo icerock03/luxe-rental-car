@@ -1,0 +1,16 @@
+# Node modules
+node_modules/
+
+# Fichiers sensibles
+.env
+
+# Fichiers de logs
+*.log
+
+# Cache système
+.DS_Store
+Thumbs.db
+
+# Ancien dossier d'upload à ignorer
+upload/
+upload_new/
