@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  const vehiclesContainer = document.getElementById('vehicles-container');
+  const container = document.getElementById('vehicles-container');
 
   try {
     const response = await fetch('https://luxe-rental-car-backend.onrender.com/api/vehicles');
@@ -13,14 +13,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       img.src = `https://luxe-rental-car-backend.onrender.com/upload/${vehicle.image}`;
       img.alt = vehicle.name;
 
-      const name = document.createElement('h2');
+      const name = document.createElement('h3');
       name.textContent = vehicle.name;
 
       const brand = document.createElement('p');
       brand.textContent = `Marque : ${vehicle.brand}`;
 
       const price = document.createElement('p');
-      price.textContent = `Prix : ${vehicle.price_per_day} MAD / jour`;
+      price.textContent = `Prix/jour : ${vehicle.price_per_day} DH`;
 
       const button = document.createElement('a');
       button.href = `booking.html?vehicle=${vehicle.id}`;
@@ -33,10 +33,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       card.appendChild(price);
       card.appendChild(button);
 
-      vehiclesContainer.appendChild(card);
+      container.appendChild(card);
     });
   } catch (error) {
-    console.error('❌ Erreur chargement véhicules :', error);
-    vehiclesContainer.innerHTML = '<p>❌ Impossible de charger les véhicules.</p>';
+    console.error('Erreur lors du chargement des véhicules :', error);
+    container.textContent = "Erreur de chargement des véhicules.";
   }
 });
