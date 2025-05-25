@@ -1,43 +1,30 @@
-document.addEventListener('DOMContentLoaded', async () => {
-  const vehiclesContainer = document.getElementById('vehicles-container');
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+require('dotenv').config();
+const app = express();
+const pool = require('./db');
 
-  try {
-    const response = await fetch('https://luxe-rental-car-backend.onrender.com/api/vehicles');
-    const vehicles = await response.json();
+// Middlewares
+app.use(cors());
+app.use(express.json());
 
-    vehicles.forEach(vehicle => {
-      const card = document.createElement('div');
-      card.classList.add('vehicle-card');
+// ✅ Servir les fichiers statiques
+app.use('/upload', express.static(path.join(__dirname, 'upload'))); // 👉 PLACE-LA ICI
+app.use(express.static(path.join(__dirname, 'public')));
 
-      const img = document.createElement('img');
-      img.src = `https://luxe-rental-car-backend.onrender.com/upload/${vehicle.image}`;
-      img.alt = vehicle.name;
+// Routes
+const vehicleRoutes = require('./routes/vehicle');
+const bookingRoutes = require('./routes/booking');
+const adminRoutes = require('./routes/admin');
 
-      const name = document.createElement('h2');
-      name.textContent = vehicle.name;
+app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/admin', adminRoutes);
 
-      const brand = document.createElement('p');
-      brand.textContent = `Marque : ${vehicle.brand}`;
-
-      const price = document.createElement('p');
-      price.textContent = `Prix : ${vehicle.price_per_day} MAD / jour`;
-
-      const button = document.createElement('a');
-      button.href = `booking.html?vehicle=${vehicle.id}`;
-      button.textContent = 'Réserver';
-      button.classList.add('btn');
-
-      card.appendChild(img);
-      card.appendChild(name);
-      card.appendChild(brand);
-      card.appendChild(price);
-      card.appendChild(button);
-
-      vehiclesContainer.appendChild(card);
-    });
-  } catch (err) {
-    console.error('Erreur lors du chargement des véhicules', err);
-    vehiclesContainer.innerHTML = '<p>Impossible de charger les véhicules.</p>';
-  }
+// Lancer le serveur
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`✅ Serveur lancé sur le port ${PORT}`);
 });
 
