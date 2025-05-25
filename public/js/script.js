@@ -1,45 +1,27 @@
-
 document.addEventListener('DOMContentLoaded', async () => {
   const container = document.getElementById('vehicles-container');
 
   try {
-    const response = await fetch('https://luxe-rental-car-backend.onrender.com/api/vehicles');
+    const response = await fetch('/api/vehicles');
     const vehicles = await response.json();
 
-    vehicles.forEach(vehicle => {
-      const card = document.createElement('div');
-      card.classList.add('vehicle-card');
+    if (!Array.isArray(vehicles)) {
+      container.innerHTML = '<p>Aucune voiture disponible.</p>';
+      return;
+    }
 
-      const img = document.createElement('img');
-      img.src = `https://luxe-rental-car-backend.onrender.com/upload/${vehicle.image}`;
-      img.alt = vehicle.name;
-      img.classList.add('vehicle-image'); // pour le style
-
-      const name = document.createElement('h3');
-      name.textContent = vehicle.name;
-
-      const brand = document.createElement('p');
-      brand.textContent = `Marque : ${vehicle.brand}`;
-
-      const price = document.createElement('p');
-      price.textContent = `Prix : ${vehicle.price_per_day} DH`;
-
-      const button = document.createElement('a');
-      button.href = `booking.html?vehicle=${vehicle.id}`;
-      button.textContent = 'Réserver';
-      button.classList.add('btn');
-
-      card.appendChild(img);
-      card.appendChild(name);
-      card.appendChild(brand);
-      card.appendChild(price);
-      card.appendChild(button);
-
-      container.appendChild(card);
-    });
+    container.innerHTML = vehicles.map(vehicle => `
+      <div class="vehicle-card">
+        <img src="/upload/${vehicle.image}" alt="${vehicle.name}" />
+        <h2>${vehicle.name}</h2>
+        <p>Marque : ${vehicle.brand}</p>
+        <p>Prix : ${vehicle.price_per_day} DH</p>
+        <a href="booking.html?vehicle=${vehicle.id}" class="btn">Réserver</a>
+      </div>
+    `).join('');
   } catch (error) {
-    console.error('Erreur lors du chargement des véhicules :', error);
-    container.innerHTML = `<p style="color:red">Erreur de chargement des véhicules.</p>`;
+    console.error("Erreur lors de l'affichage des véhicules :", error);
+    container.innerHTML = '<p>Erreur de chargement des véhicules.</p>';
   }
 });
 
