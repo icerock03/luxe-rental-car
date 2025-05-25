@@ -1,72 +1,78 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('vehicleForm');
-  const message = document.getElementById('formMessage');
-  const vehicleList = document.getElementById('vehicleList');
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("addVehicleForm");
+  const message = document.getElementById("adminMessage");
 
-  const loadVehicles = async () => {
-    vehicleList.innerHTML = '';
-    try {
-      const res = await fetch('/api/vehicles');
-      const data = await res.json();
-
-      data.forEach(v => {
-        const card = document.createElement('div');
-        card.className = 'vehicle-card';
-        card.innerHTML = `
-          <img src="/upload/${v.image}" alt="${v.name}" class="vehicle-image">
-          <h3>${v.name}</h3>
-          <p>Marque : ${v.brand}</p>
-          <p>Prix : ${v.price_per_day} DH</p>
-          <button data-id="${v.id}" class="delete-btn">🗑 Supprimer</button>
-        `;
-        vehicleList.appendChild(card);
-      });
-    } catch (err) {
-      vehicleList.innerHTML = "<p>Erreur de chargement des véhicules.</p>";
-    }
-  };
-
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const formData = new FormData(form);
 
     try {
-      const res = await fetch('/api/vehicles', {
-        method: 'POST',
-        body: formData
+      const response = await fetch("/api/vehicles", {
+        method: "POST",
+        body: formData,
       });
 
-      const result = await res.json();
-      if (res.ok) {
-        message.textContent = result.message;
-        message.style.color = 'green';
+      const data = await response.json();
+
+      if (response.ok) {
+        message.style.color = "green";
+        message.textContent = data.message;
         form.reset();
-        loadVehicles();
+        fetchVehicles(); // rafraîchir la liste
       } else {
-        message.textContent = result.error;
-        message.style.color = 'red';
+        message.style.color = "red";
+        message.textContent = data.error || "Erreur";
       }
     } catch (err) {
-      message.textContent = "Erreur lors de l'ajout du véhicule.";
-      message.style.color = 'red';
+      console.error("Erreur ajout véhicule :", err);
+      message.style.color = "red";
+      message.textContent = "Erreur de connexion au serveur.";
     }
   });
 
-  vehicleList.addEventListener('click', async (e) => {
-    if (e.target.classList.contains('delete-btn')) {
-      const id = e.target.getAttribute('data-id');
-      if (confirm("Supprimer ce véhicule ?")) {
-        try {
-          const res = await fetch(`/api/vehicles/${id}`, { method: 'DELETE' });
-          const result = await res.json();
-          alert(result.message);
-          loadVehicles();
-        } catch (err) {
-          alert("Erreur lors de la suppression.");
-        }
-      }
-    }
-  });
+  // Liste les véhicules
+  async function fetchVehicles() {
+    try {
+      const response = await fetch("/api/vehicles");
+      const vehicles = await response.json();
 
-  loadVehicles();
+      const container = document.getElementById("vehicleList");
+      container.innerHTML = "";
+
+      vehicles.forEach((v) => {
+        const div = document.createElement("div");
+        div.classList.add("vehicle-card");
+
+        div.innerHTML = `
+          <img src="/upload/${v.image}" alt="${v.name}" />
+          <h3>${v.name}</h3>
+          <p>Marque : ${v.brand}</p>
+          <p>Prix : ${v.price_per_day} DH</p>
+          <button onclick="deleteVehicle(${v.id})">🗑 Supprimer</button>
+        `;
+
+        container.appendChild(div);
+      });
+    } catch (err) {
+      console.error("Erreur affichage véhicules admin :", err);
+    }
+  }
+
+  window.deleteVehicle = async function (id) {
+    if (!confirm("Supprimer ce véhicule ?")) return;
+
+    try {
+      const response = await fetch(`/api/vehicles/${id}`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      fetchVehicles();
+    } catch (err) {
+      console.error("Erreur suppression véhicule :", err);
+    }
+  };
+
+  fetchVehicles(); // au chargement
 });
+
