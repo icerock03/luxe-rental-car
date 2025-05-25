@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', async () => {
   const container = document.getElementById('vehicles-container');
 
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const img = document.createElement('img');
       img.src = `https://luxe-rental-car-backend.onrender.com/upload/${vehicle.image}`;
       img.alt = vehicle.name;
+      img.classList.add('vehicle-image'); // pour le style
 
       const name = document.createElement('h3');
       name.textContent = vehicle.name;
@@ -20,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       brand.textContent = `Marque : ${vehicle.brand}`;
 
       const price = document.createElement('p');
-      price.textContent = `Prix/jour : ${vehicle.price_per_day} DH`;
+      price.textContent = `Prix : ${vehicle.price_per_day} DH`;
 
       const button = document.createElement('a');
       button.href = `booking.html?vehicle=${vehicle.id}`;
@@ -40,3 +42,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     container.innerHTML = `<p style="color:red">Erreur de chargement des véhicules.</p>`;
   }
 });
+
