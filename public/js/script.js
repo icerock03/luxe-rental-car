@@ -1,27 +1,43 @@
-document.addEventListener('DOMContentLoaded', async () => {
-  const container = document.getElementById('vehicles-container');
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('/api/vehicles')
+    .then(response => response.json())
+    .then(vehicles => {
+      const container = document.getElementById('vehicles-container');
+      container.innerHTML = '';
 
-  try {
-    const response = await fetch('/api/vehicles');
-    const vehicles = await response.json();
+      vehicles.forEach(vehicle => {
+        const card = document.createElement('div');
+        card.classList.add('vehicle-card');
 
-    if (!Array.isArray(vehicles)) {
-      container.innerHTML = '<p>Aucune voiture disponible.</p>';
-      return;
-    }
+        const img = document.createElement('img');
+        img.src = `/upload/${vehicle.image}`;
+        img.alt = vehicle.name;
 
-    container.innerHTML = vehicles.map(vehicle => `
-      <div class="vehicle-card">
-        <img src="/upload/${vehicle.image}" alt="${vehicle.name}" />
-        <h2>${vehicle.name}</h2>
-        <p>Marque : ${vehicle.brand}</p>
-        <p>Prix : ${vehicle.price_per_day} DH</p>
-        <a href="booking.html?vehicle=${vehicle.id}" class="btn">Réserver</a>
-      </div>
-    `).join('');
-  } catch (error) {
-    console.error("Erreur lors de l'affichage des véhicules :", error);
-    container.innerHTML = '<p>Erreur de chargement des véhicules.</p>';
-  }
+        const title = document.createElement('h3');
+        title.textContent = vehicle.name;
+
+        const brand = document.createElement('p');
+        brand.textContent = `Marque : ${vehicle.brand}`;
+
+        const price = document.createElement('p');
+        price.textContent = `Prix : ${vehicle.price_per_day} DH`;
+
+        const reserveBtn = document.createElement('a');
+        reserveBtn.textContent = 'Réserver';
+        reserveBtn.href = `booking.html?vehicle=${vehicle.id}`;
+        reserveBtn.classList.add('reserve-button');
+
+        card.appendChild(img);
+        card.appendChild(title);
+        card.appendChild(brand);
+        card.appendChild(price);
+        card.appendChild(reserveBtn);
+
+        container.appendChild(card);
+      });
+    })
+    .catch(error => {
+      console.error('Erreur lors du chargement des véhicules', error);
+    });
 });
 
