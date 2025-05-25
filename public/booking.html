@@ -1,36 +1,56 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Réserver un véhicule</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      background-color: #000;
+      color: gold;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+
+    form {
+      background-color: #111;
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    input, select {
+      padding: 10px;
+      margin: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .btn {
+      background-color: gold;
+      color: black;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #message {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Réserver un véhicule</h1>
-    <nav>
-      <a href="index.html">Accueil</a>
-      <a href="vehicles.html">Nos véhicules</a>
-    </nav>
-  </header>
-
-  <main>
-    <form id="reservationForm" class="form-style">
-      <label for="vehicle_id">Véhicule :</label>
-      <select id="vehicle_id" name="vehicle_id" required></select>
-
-      <label for="start_date">Date de début :</label>
-      <input type="date" id="start_date" name="start_date" required>
-
-      <label for="end_date">Date de fin :</label>
-      <input type="date" id="end_date" name="end_date" required>
-
-      <button type="submit" class="btn">Réserver</button>
-    </form>
-
+  <h1>Réserver un véhicule</h1>
+  <form id="reservationForm">
+    <input type="text" id="customer_name" placeholder="Nom complet" required />
+    <input type="date" id="start_date" required />
+    <input type="date" id="end_date" required />
+    <input type="hidden" id="vehicle_id" />
+    <button type="submit" class="btn">Confirmer la réservation</button>
     <p id="message"></p>
-  </main>
+  </form>
 
   <script src="js/booking.js"></script>
 </body>

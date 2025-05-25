@@ -1,53 +1,43 @@
-document.addEventListener('DOMContentLoaded', async () => {
-  const select = document.getElementById('vehicle_id');
-  const form = document.getElementById('reservationForm');
-  const message = document.getElementById('message');
+document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const vehicleId = urlParams.get('vehicle');
 
-  try {
-    const response = await fetch('/api/vehicles');
-    const vehicles = await response.json();
+  document.getElementById('vehicle_id').value = vehicleId;
 
-    vehicles.forEach(vehicle => {
-      const option = document.createElement('option');
-      option.value = vehicle.id;
-      option.textContent = `${vehicle.name} (${vehicle.brand})`;
-      select.appendChild(option);
-    });
-  } catch (error) {
-    console.error('Erreur chargement véhicules:', error);
-    message.textContent = "Erreur de chargement des véhicules.";
-  }
-
-  form.addEventListener('submit', async (e) => {
+  document.getElementById('reservationForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const data = {
-      vehicle_id: select.value,
-      start_date: document.getElementById('start_date').value,
-      end_date: document.getElementById('end_date').value
-    };
+    const customer_name = document.getElementById('customer_name').value;
+    const start_date = document.getElementById('start_date').value;
+    const end_date = document.getElementById('end_date').value;
+
+    if (!vehicleId || !customer_name || !start_date || !end_date) {
+      document.getElementById('message').textContent = '🚨 Tous les champs sont obligatoires.';
+      return;
+    }
 
     try {
-      const response = await fetch('/api/bookings', {
+      const response = await fetch('https://luxe-rental-car-backend.onrender.com/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify({ vehicle_id: vehicleId, customer_name, start_date, end_date })
       });
 
       const result = await response.json();
+      const msg = document.getElementById('message');
 
       if (response.ok) {
-        message.textContent = result.message;
-        message.style.color = 'green';
-        form.reset();
+        msg.style.color = 'lightgreen';
+        msg.textContent = '✅ Réservation confirmée !';
       } else {
-        message.textContent = result.error || 'Erreur de réservation.';
-        message.style.color = 'red';
+        msg.style.color = 'red';
+        msg.textContent = result.error || '❌ Erreur lors de la réservation.';
       }
+
     } catch (error) {
-      console.error('Erreur réservation:', error);
-      message.textContent = "Erreur lors de l'envoi de la réservation.";
-      message.style.color = 'red';
+      document.getElementById('message').style.color = 'red';
+      document.getElementById('message').textContent = '❌ Erreur serveur.';
+      console.error(error);
     }
   });
 });
