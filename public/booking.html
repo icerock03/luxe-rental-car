@@ -2,53 +2,39 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Réservation - Choix du véhicule</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Réserver un véhicule</title>
   <link rel="stylesheet" href="css/style.css" />
-  <style>
-    body {
-      background-color: #000;
-      color: gold;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 40px;
-    }
-    form {
-      background-color: #111;
-      padding: 20px;
-      border-radius: 10px;
-      display: inline-block;
-    }
-    input, select {
-      padding: 10px;
-      margin: 10px;
-      width: 100%;
-      border: none;
-      border-radius: 5px;
-    }
-    .btn {
-      background-color: gold;
-      color: black;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    #message {
-      margin-top: 20px;
-    }
-  </style>
 </head>
 <body>
-  <h1>Réserver un véhicule</h1>
-  <form id="reservationForm">
-    <input type="text" id="customer_name" placeholder="Nom complet" required />
-    <select id="vehicle_id" required>
-      <option value="">-- Choisir un véhicule --</option>
-    </select>
-    <input type="date" id="start_date" required />
-    <input type="date" id="end_date" required />
-    <button type="submit" class="btn">Réserver</button>
-    <p id="message"></p>
-  </form>
+  <header>
+    <h1>Réservation de véhicule</h1>
+  </header>
+
+  <main>
+    <form id="reservationForm" class="form-style">
+      <label for="customer_name">Nom complet :</label>
+      <input type="text" id="customer_name" required />
+
+      <label for="vehicle_id">Véhicule :</label>
+      <select id="vehicle_id" required>
+        <option value="">-- Choisir un véhicule --</option>
+      </select>
+
+      <label for="start_date">Date de début :</label>
+      <input type="date" id="start_date" required />
+
+      <label for="end_date">Date de fin :</label>
+      <input type="date" id="end_date" required />
+
+      <button type="submit" class="btn">Réserver</button>
+      <p id="bookingMessage"></p>
+    </form>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Luxe Rental Car</p>
+  </footer>
 
   <script src="js/booking.js"></script>
 </body>

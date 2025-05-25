@@ -1,60 +1,70 @@
 document.addEventListener('DOMContentLoaded', async () => {
+  const form = document.getElementById('reservationForm');
   const vehicleSelect = document.getElementById('vehicle_id');
-  const message = document.getElementById('message');
+  const message = document.getElementById('bookingMessage');
 
-  // Charger les véhicules dans la liste déroulante
+  // ✅ Charger les véhicules dans la liste déroulante
   try {
-    const res = await fetch('https://luxe-rental-car-backend.onrender.com/api/vehicles');
+    const res = await fetch('/api/vehicles');
     const vehicles = await res.json();
 
     vehicles.forEach(vehicle => {
       const option = document.createElement('option');
       option.value = vehicle.id;
-      option.textContent = `${vehicle.name} - ${vehicle.brand}`;
+      option.textContent = `${vehicle.name} (${vehicle.brand})`;
       vehicleSelect.appendChild(option);
     });
+
+    // ✅ Pré-remplir si un ID est passé dans l'URL
+    const params = new URLSearchParams(window.location.search);
+    const vehicleIdFromURL = params.get('vehicle');
+    if (vehicleIdFromURL) {
+      vehicleSelect.value = vehicleIdFromURL;
+    }
+
   } catch (err) {
-    console.error('Erreur chargement véhicules:', err);
-    message.textContent = 'Erreur lors du chargement des véhicules.';
-    message.style.color = 'red';
+    console.error("Erreur chargement véhicules :", err);
   }
 
-  // Gestion du formulaire
-  document.getElementById('reservationForm').addEventListener('submit', async (e) => {
+  // ✅ Soumission de la réservation
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const customer_name = document.getElementById('customer_name').value;
-    const vehicle_id = document.getElementById('vehicle_id').value;
-    const start_date = document.getElementById('start_date').value;
-    const end_date = document.getElementById('end_date').value;
+    const data = {
+      customer_name: document.getElementById('customer_name').value,
+      vehicle_id: vehicleSelect.value,
+      start_date: document.getElementById('start_date').value,
+      end_date: document.getElementById('end_date').value,
+    };
 
-    if (!vehicle_id || !customer_name || !start_date || !end_date) {
-      message.textContent = '🚨 Tous les champs sont obligatoires.';
+    if (!data.customer_name || !data.vehicle_id || !data.start_date || !data.end_date) {
       message.style.color = 'red';
+      message.textContent = 'Tous les champs sont obligatoires.';
       return;
     }
 
     try {
-      const response = await fetch('https://luxe-rental-car-backend.onrender.com/api/bookings', {
+      const response = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ vehicle_id, customer_name, start_date, end_date })
+        body: JSON.stringify(data),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        message.style.color = 'lightgreen';
-        message.textContent = '✅ Réservation enregistrée avec succès.';
+        message.style.color = 'green';
+        message.textContent = result.message;
+        form.reset();
       } else {
         message.style.color = 'red';
-        message.textContent = result.error || 'Erreur de réservation.';
+        message.textContent = result.error || 'Erreur';
       }
 
     } catch (error) {
-      console.error(error);
+      console.error('Erreur lors de la réservation :', error);
       message.style.color = 'red';
-      message.textContent = 'Erreur serveur.';
+      message.textContent = 'Erreur de connexion au serveur.';
     }
   });
 });
