@@ -37,6 +37,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   } catch (error) {
     console.error('Erreur lors du chargement des véhicules :', error);
-    container.textContent = "Erreur de chargement des véhicules.";
+    container.innerHTML = `<p style="color:red">Erreur de chargement des véhicules.</p>`;
   }
 });
