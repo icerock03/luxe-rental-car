@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       const img = document.createElement('img');
       img.src = `https://luxe-rental-car-backend.onrender.com/upload/${vehicle.image}`;
       img.alt = vehicle.name;
-      img.classList.add('vehicle-image');
 
       const name = document.createElement('h2');
       name.textContent = vehicle.name;
@@ -37,8 +36,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       vehiclesContainer.appendChild(card);
     });
   } catch (err) {
-    console.error('❌ Erreur lors du chargement des véhicules', err);
-    vehiclesContainer.innerHTML = '<p>Erreur de chargement des véhicules.</p>';
+    console.error('Erreur lors du chargement des véhicules', err);
+    vehiclesContainer.innerHTML = '<p>Impossible de charger les véhicules.</p>';
   }
 });
 

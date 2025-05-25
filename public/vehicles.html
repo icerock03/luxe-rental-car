@@ -1,28 +1,45 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nos véhicules - Luxe Rental Car</title>
-  <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8" />
+  <title>Nos Véhicules</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      background-color: #000;
+      color: gold;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+    .vehicle-card {
+      border: 1px solid gold;
+      padding: 15px;
+      margin: 15px;
+      background-color: #111;
+      border-radius: 10px;
+      display: inline-block;
+      width: 280px;
+      vertical-align: top;
+    }
+    .vehicle-card img {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+    .btn {
+      background-color: gold;
+      color: black;
+      padding: 10px 20px;
+      display: inline-block;
+      margin-top: 10px;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Nos Véhicules</h1>
-    <nav>
-      <a href="index.html">Accueil</a>
-      <a href="booking.html">Réserver</a>
-      <a href="admin.html">Admin</a>
-    </nav>
-  </header>
-
-  <main>
-    <section id="vehicles-container" class="vehicle-list"></section>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Luxe Rental Car</p>
-  </footer>
+  <h1>Nos véhicules disponibles</h1>
+  <div id="vehicles-container"></div>
 
   <script src="js/script.js"></script>
 </body>
