@@ -1,30 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const vehicleController = require('../controllers/vehicleController');
 const multer = require('multer');
+const path = require('path');
+const vehicleController = require('../controllers/vehicleController');
 
-// Configuration de stockage avec multer
+// Configuration du stockage des images avec multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'upload/');
+    cb(null, path.join(__dirname, '../public/upload/'));
   },
   filename: (req, file, cb) => {
-    const uniqueName = Date.now() + '-' + file.originalname;
-    cb(null, uniqueName);
+    const uniqueSuffix = Date.now() + '-' + file.originalname;
+    cb(null, uniqueSuffix);
   }
 });
 
 const upload = multer({ storage });
 
-// ROUTES
-
-// GET : tous les véhicules
+// Routes
 router.get('/', vehicleController.getAllVehicles);
-
-// POST : ajouter un véhicule avec image
-router.post('/', upload.single('image'), vehicleController.addVehicleWithImage);
-
-// DELETE : supprimer un véhicule par ID
+router.post('/', upload.single('image'), vehicleController.addVehicle);
 router.delete('/:id', vehicleController.deleteVehicle);
 
 module.exports = router;
+
