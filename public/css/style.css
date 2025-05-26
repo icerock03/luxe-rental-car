@@ -1,108 +1,58 @@
-.form-style {
-  display: flex;
-  flex-direction: column;
-  max-width: 400px;
-  margin: auto;
-  gap: 10px;
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+  color: #333;
 }
 
-input[type="text"],
-input[type="number"],
-input[type="file"],
-button {
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
+header {
+  background-color: #111;
+  color: gold;
+  padding: 1rem;
+  text-align: center;
 }
 
-.vehicle-card button {
-  background-color: darkred;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+h1 {
+  margin: 0;
 }
-.vehicle-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+
+.vehicle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
   padding: 20px;
 }
 
 .vehicle-card {
-  background-color: #222;
-  border: 1px solid gold;
+  background-color: white;
   border-radius: 10px;
-  margin: 10px;
-  padding: 20px;
-  width: 250px;
-  text-align: center;
-  color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.vehicle-card:hover {
+  transform: translateY(-5px);
 }
 
 .vehicle-card img {
   width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #111;
-  color: #fff;
+  height: 180px;
+  object-fit: cover;
 }
 
-header {
-  background-color: #000;
-  padding: 20px;
-  text-align: center;
-  border-bottom: 2px solid gold;
+.vehicle-card .info {
+  padding: 1rem;
 }
 
-header h1 {
-  margin: 0;
-  color: gold;
+.vehicle-card .info h2 {
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
 }
 
-nav a {
-  margin: 0 15px;
-  text-decoration: none;
-  color: #fff;
-  font-weight: bold;
+.vehicle-card .info p {
+  margin: 5px 0;
+  font-size: 0.95rem;
 }
 
-nav a:hover {
-  color: gold;
-}
-
-.hero {
-  text-align: center;
-  padding: 100px 20px;
-  background-image: url('../upload/porsche.jpg'); /* À remplacer avec ta vraie image */
-  background-size: cover;
-  background-position: center;
-  color: white;
-}
-
-.hero h2 {
-  font-size: 48px;
-  margin-bottom: 20px;
-}
-
-.hero .btn {
-  background-color: gold;
-  color: black;
-  padding: 15px 30px;
-  text-decoration: none;
-  font-weight: bold;
-  border-radius: 10px;
-}
-
-footer {
-  text-align: center;
-  padding: 20px;
-  background-color: #000;
-  border-top: 1px solid gold;
-}
