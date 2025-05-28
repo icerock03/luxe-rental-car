@@ -1,33 +1,33 @@
 const express = require('express');
-const cors = require('cors');
-const path = require('path');
-require('dotenv').config();
-
 const app = express();
+const path = require('path');
+const dotenv = require('dotenv');
+const cors = require('cors');
 
-// Middleware
-app.use(cors());
+// Charger les variables d'environnement
+dotenv.config();
+
+// Middleware pour parser le JSON
 app.use(express.json());
+app.use(cors());
 
-// ✅ Servir les fichiers statiques (HTML, CSS, JS)
+// ✅ Permet de servir tous les fichiers statiques (HTML, CSS, JS, images)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ✅ Servir les images du dossier public/upload
-app.use('/upload', express.static(path.join(__dirname, 'public/upload')));
-
-// ✅ Routes
+// Importer les routes
 const vehicleRoutes = require('./routes/vehicle');
-const bookingRoutes = require('./routes/booking');
-const adminRoutes = require('./routes/admin');
 
+// Utiliser les routes
 app.use('/api/vehicles', vehicleRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/admin', adminRoutes);
 
-// ✅ Démarrer le serveur
-const PORT = process.env.PORT || 10000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ Serveur lancé sur le port ${PORT}`);
+// ✅ Route pour tester le backend (optionnelle)
+app.get('/api', (req, res) => {
+  res.send('API Luxe Rental Car opérationnelle');
 });
 
+// Lancer le serveur
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Serveur lancé sur le port ${PORT}`);
+});
 
